@@ -34,12 +34,18 @@ if __name__ == "__main__":
     low_indices = np.tril_indices(num_users+1, -1)
     pearson_matrix[low_indices] = pearson_matrix.T[low_indices]
 
-    # # RANDOM GROUPS
-    # users_per_random_group = 5
+    # RANDOM GROUPS
+    users_per_random_group = 5
     
-    # remainder_users = len(train_users) % users_per_random_group
-    # if remainder_users != 0:
-    #     train_users = train_users[:-remainder_users]
+    random_groups = {}
 
-    # num_random_groups = int(len(train_users) / users_per_random_group)
-    # random_groups = np.random.permutation(train_users).reshape(num_random_groups, users_per_random_group)
+    for movie in test_movies:
+        random_groups[movie] = []
+        available_users = movielens_utils.users_who_have_seen(movie, test_ratings_by_user)
+
+        while len(available_users) >= users_per_random_group:
+            available_users = np.random.permutation(available_users)
+            selected_users = available_users[:users_per_random_group]
+            available_users = available_users[users_per_random_group:]
+
+            random_groups[movie].append(selected_users)
