@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 def load_movie_ratings(train_movies, test_movies, ratings):
         
@@ -51,3 +52,13 @@ def calculate_pearson_coefficient(movie_ratings, user1, user2):
 
     r = num/den
     return r
+
+def users_who_have_seen(movie, ratings_by_user):
+    
+    user_pool = []
+
+    for user in ratings_by_user:
+        if movie in ratings_by_user[user]:
+            user_pool.append(user)
+
+    return np.array(user_pool)
