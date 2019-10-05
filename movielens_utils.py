@@ -62,3 +62,10 @@ def users_who_have_seen(movie, ratings_by_user):
             user_pool.append(user)
 
     return np.array(user_pool)
+
+def have_seen_4_common_movies(user1, user2, ratings_by_user):
+    
+    user1_movies = ratings_by_user[user1].keys()
+    user2_movies = ratings_by_user[user2].keys()
+
+    return len(user1_movies & user2_movies) >= 4
