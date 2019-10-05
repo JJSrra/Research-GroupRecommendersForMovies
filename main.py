@@ -34,18 +34,23 @@ if __name__ == "__main__":
     low_indices = np.tril_indices(num_users+1, -1)
     pearson_matrix[low_indices] = pearson_matrix.T[low_indices]
 
-    # RANDOM GROUPS
-    users_per_random_group = 5
+    # Group creation
+    users_per_group = 5
     
+    # RANDOM GROUPS
     random_groups = {}
 
     for movie in test_movies:
         random_groups[movie] = []
         available_users = movielens_utils.users_who_have_seen(movie, test_ratings_by_user)
 
-        while len(available_users) >= users_per_random_group:
+        while len(available_users) >= users_per_group:
             available_users = np.random.permutation(available_users)
-            selected_users = available_users[:users_per_random_group]
-            available_users = available_users[users_per_random_group:]
+            selected_users = available_users[:users_per_group]
+            available_users = available_users[users_per_group:]
 
             random_groups[movie].append(selected_users)
+
+    f = open("random_groups.txt", "w")
+    f.write(str(random_groups))
+    f.close()
