@@ -17,18 +17,20 @@ if __name__ == "__main__":
     train_size = int(np.ceil(len(movie_ids) * 0.8))
     train_movies = movie_ids[:train_size]
     test_movies = movie_ids[train_size:]
-    train_ratings_by_user, test_ratings_by_user = movielens_utils.load_movie_ratings(train_movies, test_movies, ratings)
+    train_ratings_by_user, test_ratings_by_user = movielens_utils.load_movie_ratings(
+        train_movies, test_movies, ratings)
     num_users = len(train_ratings_by_user)
 
     # Calculate Pearson Correlation Coefficient for all users (only using train movies)
     # Adding one extra initial row for user 0 which does not exist (users in range 1-610)
     pearson_matrix = np.matrix(np.zeros([num_users+1, num_users+1]))
-    
+
     print("Processing Pearson Correlation Matrix...")
 
     for user1 in range(1, num_users+1):
         for user2 in range(user1+1, num_users+1):
-            pearson_matrix[user1,user2] = movielens_utils.calculate_pearson_coefficient(train_ratings_by_user, user1, user2)
+            pearson_matrix[user1, user2] = movielens_utils.calculate_pearson_coefficient(
+                train_ratings_by_user, user1, user2)
 
     # Duplicate upper triangle in lower triangle of the matrix
     low_indices = np.tril_indices(num_users+1, -1)
@@ -36,7 +38,7 @@ if __name__ == "__main__":
 
     # Group creation
     users_per_group = 5
-    
+
     # RANDOM GROUPS
     random_groups = {}
 
@@ -55,7 +57,7 @@ if __name__ == "__main__":
     f.write(str(random_groups))
     f.close()
 
-    # BUDDIES GROUP
+    # BUDDIES GROUPS
     buddies_groups = {}
 
     for movie in test_movies:
@@ -74,7 +76,7 @@ if __name__ == "__main__":
 
             # If a user has seen at least 1 movie in common with the current user, it is considered a buddy
             # (considering the high correlation indicated by the Pearson Correlation Matrix)
-            for user in available_users:
+            for user in sorted_by_pearson:
                 if movielens_utils.have_seen_X_common_movies(1, current_user, user, train_ratings_by_user):
                     selected_users.append(user)
 
