@@ -62,8 +62,7 @@ if __name__ == "__main__":
 
     for movie in test_movies:
         buddies_groups[movie] = []
-        available_users = movielens_utils.users_who_have_seen(
-            movie, test_ratings_by_user)
+        available_users = movielens_utils.users_who_have_seen(movie, test_ratings_by_user)
 
         while len(available_users) >= users_per_group:
             current_user = available_users[0]
@@ -89,4 +88,33 @@ if __name__ == "__main__":
 
     f = open("buddies_groups.txt", "w")
     f.write(str(buddies_groups))
+    f.close()
+
+    # CIRCUMSTANTIAL GROUPS
+    circumstantial_groups = {}
+
+    for movie in test_movies:
+        circumstantial_groups[movie] = []
+        available_users = movielens_utils.users_who_have_seen(movie, test_ratings_by_user)
+
+        while len(available_users) >= users_per_group:
+            current_user = available_users[0]
+            available_users = np.delete(available_users, 0)
+            selected_users = []
+
+            # If a user has seen at least 4 movies in common with the current user, they are considered to
+            # be in the same circumstantial group
+            for user in available_users:
+                if movielens_utils.have_seen_X_common_movies(4, current_user, user, train_ratings_by_user):
+                    selected_users.append(user)
+
+            # While there are enough users, form a group with the current user
+            while len(selected_users) >= (users_per_group-1):
+                new_group = [current_user]
+                new_group.extend(selected_users[:users_per_group-1])
+                circumstantial_groups[movie].append(np.array(new_group))
+                selected_users = selected_users[users_per_group-1:]
+
+    f = open("circumstantial_groups.txt", "w")
+    f.write(str(circumstantial_groups))
     f.close()
