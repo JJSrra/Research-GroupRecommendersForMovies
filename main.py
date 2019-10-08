@@ -72,10 +72,10 @@ if __name__ == "__main__":
             sorted_by_pearson = sorted(
                 available_users[1:], key=lambda user: pearson_matrix[current_user, user], reverse=True)
 
-            # If a user has seen at least 2 movies in common with the current user (1 + the current one we are evaluating),
+            # If a user has seen at least 1 movies in common with the current user (in the training set),
             # it is considered a buddy (considering the high correlation indicated by the Pearson Correlation Matrix)
             for user in sorted_by_pearson:
-                if movielens_utils.have_seen_X_common_movies(2, current_user, user, train_ratings_by_user):
+                if movielens_utils.have_seen_X_common_movies(1, current_user, user, train_ratings_by_user):
                     selected_users.append(user)
                     if len(selected_users) == users_per_group:
                         break
