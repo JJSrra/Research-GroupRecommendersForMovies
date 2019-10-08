@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
         while len(available_users) >= users_per_group:
             current_user = available_users[0]
-            selected_users = []
+            selected_users = [current_user]
 
             # Sort the remaining users based on their correlation with the current user
             sorted_by_pearson = sorted(
@@ -77,21 +77,17 @@ if __name__ == "__main__":
             for user in sorted_by_pearson:
                 if movielens_utils.have_seen_X_common_movies(2, current_user, user, train_ratings_by_user):
                     selected_users.append(user)
-                    if len(selected_users) > users_per_group:
+                    if len(selected_users) == users_per_group:
                         break
 
             # Form a group with the selected users if there are enough
-            if len(selected_users) > users_per_group:
-                new_group = [current_user]
-                new_group.extend(selected_users[:users_per_group-1])
-                buddies_groups[movie].append(np.array(new_group))
+            if len(selected_users) == users_per_group:
+                buddies_groups[movie].append(np.array(selected_users))
 
                 # And remove these users from the pool
-                available_users = np.setdiff1d(available_users, new_group)
+                available_users = np.setdiff1d(available_users, selected_users)
             else: # Just remove the current user 
-                available_users = np.delete(available_users, 0)
-
-
+                available_users = np.setdiff1d(available_users, current_user)
 
     f = open("buddies_groups.txt", "w")
     f.write(str(buddies_groups))
@@ -105,22 +101,26 @@ if __name__ == "__main__":
         available_users = movielens_utils.users_who_have_seen(movie, test_ratings_by_user)
 
         while len(available_users) >= users_per_group:
+            available_users = np.random.permutation(available_users)
             current_user = available_users[0]
-            available_users = np.delete(available_users, 0)
-            selected_users = []
+            selected_users = [current_user]
 
             # If a user has seen at least 4 movies in common with the current user, they are considered to
             # be in the same circumstantial group
-            for user in available_users:
+            for user in available_users[1:]:
                 if movielens_utils.have_seen_X_common_movies(4, current_user, user, train_ratings_by_user):
                     selected_users.append(user)
+                    if len(selected_users) == users_per_group:
+                        break
 
-            # While there are enough users, form a group with the current user
-            while len(selected_users) >= (users_per_group-1):
-                new_group = [current_user]
-                new_group.extend(selected_users[:users_per_group-1])
-                circumstantial_groups[movie].append(np.array(new_group))
-                selected_users = selected_users[users_per_group-1:]
+            # If there are enough users, form a circumstantial group
+            if len(selected_users) == users_per_group:
+                circumstantial_groups[movie].append(np.array(selected_users))
+
+                # And remove these users from the pool
+                available_users = np.setdiff1d(available_users, selected_users)
+            else:  # Just remove the current user
+                available_users = np.setdiff1d(available_users, current_user)
 
     f = open("circumstantial_groups.txt", "w")
     f.write(str(circumstantial_groups))
