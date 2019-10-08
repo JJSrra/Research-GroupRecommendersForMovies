@@ -66,25 +66,32 @@ if __name__ == "__main__":
 
         while len(available_users) >= users_per_group:
             current_user = available_users[0]
-            available_users = np.delete(available_users, 0)
             selected_users = []
 
             # Sort the remaining users based on their correlation with the current user
             sorted_by_pearson = sorted(
-                available_users, key=lambda user: pearson_matrix[current_user, user], reverse=True)
+                available_users[1:], key=lambda user: pearson_matrix[current_user, user], reverse=True)
 
             # If a user has seen at least 2 movies in common with the current user (1 + the current one we are evaluating),
             # it is considered a buddy (considering the high correlation indicated by the Pearson Correlation Matrix)
             for user in sorted_by_pearson:
                 if movielens_utils.have_seen_X_common_movies(2, current_user, user, train_ratings_by_user):
                     selected_users.append(user)
+                    if len(selected_users) > users_per_group:
+                        break
 
-            # While there are enough users, form a group with the current user
-            while len(selected_users) >= (users_per_group-1):
+            # Form a group with the selected users if there are enough
+            if len(selected_users) > users_per_group:
                 new_group = [current_user]
                 new_group.extend(selected_users[:users_per_group-1])
                 buddies_groups[movie].append(np.array(new_group))
-                selected_users = selected_users[users_per_group-1:]
+
+                # And remove these users from the pool
+                available_users = np.setdiff1d(available_users, new_group)
+            else: # Just remove the current user 
+                available_users = np.delete(available_users, 0)
+
+
 
     f = open("buddies_groups.txt", "w")
     f.write(str(buddies_groups))
