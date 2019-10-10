@@ -53,10 +53,6 @@ if __name__ == "__main__":
 
             random_groups[movie].append(selected_users)
 
-    f = open("random_groups.txt", "w")
-    f.write(str(random_groups))
-    f.close()
-
     # BUDDIES GROUPS
     buddies_groups = {}
 
@@ -89,10 +85,6 @@ if __name__ == "__main__":
             else: # Just remove the current user 
                 available_users = np.setdiff1d(available_users, current_user)
 
-    f = open("buddies_groups.txt", "w")
-    f.write(str(buddies_groups))
-    f.close()
-
     # CIRCUMSTANTIAL GROUPS
     circumstantial_groups = {}
 
@@ -121,6 +113,22 @@ if __name__ == "__main__":
                 available_users = np.setdiff1d(available_users, selected_users)
             else:  # Just remove the current user
                 available_users = np.setdiff1d(available_users, current_user)
+
+    # Remove from the experiment any test movie without groups in any of the criteria
+    for movie in test_movies:
+        if len(buddies_groups[movie]) == 0 | len(circumstantial_groups[movie]) == 0:
+            del random_groups[movie]
+            del buddies_groups[movie]
+            del circumstantial_groups[movie]
+
+    # File saving
+    f = open("random_groups.txt", "w")
+    f.write(str(random_groups))
+    f.close()
+
+    f = open("buddies_groups.txt", "w")
+    f.write(str(buddies_groups))
+    f.close()
 
     f = open("circumstantial_groups.txt", "w")
     f.write(str(circumstantial_groups))
