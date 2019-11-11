@@ -133,3 +133,6 @@ if __name__ == "__main__":
     f = open("circumstantial_groups.txt", "w")
     f.write(str(circumstantial_groups))
     f.close()
+
+    # Saving Pearson Correlation Matrix
+    pd.DataFrame(pearson_matrix).to_csv("pearson_correlation_matrix.csv", header = None, index = None )
