@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-def group_ratings_for_movie(group, movie, movie_ratings, pearson_matrix):
+def predict_group_individual_ratings_for_movie(group, movie, movie_ratings, pearson_matrix):
     
     # Specify the K in K-nearest neighbors for each member of the group, according to Pearson
     k_nearest = 10
