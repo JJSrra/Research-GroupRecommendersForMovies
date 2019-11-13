@@ -16,10 +16,18 @@ def predict_group_individual_ratings_for_movie(group, movie, movie_ratings, pear
         nearest_neighbors = sorted(
             available_users, key=lambda user: pearson_matrix[group_user, user], reverse=True)[:k_nearest]
         
-        group_ratings.append(predict_rating(group_user, nearest_neighbors, movie, movie_ratings))
+        group_ratings.append(predict_rating(group_user, nearest_neighbors, movie, movie_ratings, pearson_matrix[group_user]))
 
     return group_ratings
 
 
-def predict_rating(user, neighbors, movie, movie_ratings):
+def predict_rating(user, neighbors, movie, movie_ratings, user_correlation):
+    neighbor_accumulated = 0
+    normalizer = 0
     
+    for neighbor in neighbors:
+        neighbor_rating = movie_ratings[neighbor][movie] if movie in movie_ratings[neighbor] else 0
+        neighbor_accumulated += neighbor_rating * user_correlation[neighbor]
+        normalizer += abs(user_correlation[neighbor])
+
+    return neighbor_accumulated / normalizer
