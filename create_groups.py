@@ -11,6 +11,7 @@ if __name__ == "__main__":
     # Read MovieLens datasets
     ratings = pd.read_csv("dataset/ratings.csv", "|")
     movies = pd.read_csv("dataset/movies.csv", "|")
+    num_users = 610 # Number of users in 100K MovieLens Dataset
 
     # Train/test division
     movie_ids = np.random.permutation(movies.iloc[:, 0])
@@ -18,8 +19,7 @@ if __name__ == "__main__":
     train_movies = movie_ids[:train_size]
     test_movies = movie_ids[train_size:]
     train_ratings_by_user, test_ratings_by_user = movielens_utils.load_movie_ratings(
-        train_movies, test_movies, ratings)
-    num_users = len(train_ratings_by_user)
+        train_movies, test_movies, ratings, num_users)
 
     # Calculate Pearson Correlation Coefficient for all users (only using train movies)
     # Adding one extra initial row for user 0 which does not exist (users in range 1-610)

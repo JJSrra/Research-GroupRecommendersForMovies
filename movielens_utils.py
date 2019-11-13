@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-def load_movie_ratings(train_movies, test_movies, ratings):
+def load_movie_ratings(train_movies, test_movies, ratings, num_users):
         
     train_movie_ratings = {}
     test_movie_ratings = {}
@@ -17,6 +17,12 @@ def load_movie_ratings(train_movies, test_movies, ratings):
         elif movie_id in test_movies:
             test_movie_ratings.setdefault(user_id, {})
             test_movie_ratings[user_id][movie_id] = rating
+
+    for user in range(1,num_users+1): # Users in MovieLens Database start at 1 so upper bound must be set at max_index + 1
+        if user not in train_movie_ratings:
+            train_movie_ratings[user] = {}
+        if user not in test_movie_ratings:
+            test_movie_ratings[user] = {}
 
     return train_movie_ratings, test_movie_ratings
 
