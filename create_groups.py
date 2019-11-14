@@ -122,33 +122,33 @@ if __name__ == "__main__":
             del circumstantial_groups[movie]
 
     # File saving
-    f = open("random_groups.txt", "w")
+    f = open("generated_data/random_groups.txt", "w")
     f.write(str(random_groups))
     f.close()
 
-    f = open("buddies_groups.txt", "w")
+    f = open("generated_data/buddies_groups.txt", "w")
     f.write(str(buddies_groups))
     f.close()
 
-    f = open("circumstantial_groups.txt", "w")
+    f = open("generated_data/circumstantial_groups.txt", "w")
     f.write(str(circumstantial_groups))
     f.close()
 
     # Save train and test movies
     pd.DataFrame(train_movies).to_csv(
-        "train_movies.csv", header=None, index=None)
+        "generated_data/train_movies.csv", header=None, index=None)
     pd.DataFrame(test_movies).to_csv(
-        "test_movies.csv", header=None, index=None)
+        "generated_data/test_movies.csv", header=None, index=None)
 
     # Save train and test ratings by user
-    f = open("train_ratings.txt", "w")
+    f = open("generated_data/train_ratings.txt", "w")
     f.write(str(train_ratings_by_user))
     f.close()
 
-    f = open("test_ratings.txt", "w")
+    f = open("generated_data/test_ratings.txt", "w")
     f.write(str(test_ratings_by_user))
     f.close()
 
     # Saving Pearson Correlation Matrix
     pd.DataFrame(pearson_matrix).to_csv(
-        "pearson_correlation_matrix.csv", header = None, index = None)
+        "generated_data/pearson_correlation_matrix.csv", header = None, index = None)
