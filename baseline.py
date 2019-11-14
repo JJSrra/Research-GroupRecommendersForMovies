@@ -22,12 +22,16 @@ def predict_group_individual_ratings_for_movie(group, movie, movie_ratings, pear
 
 
 def predict_rating(user, neighbors, movie, movie_ratings, user_correlation):
+    # Initialize these variables that will serve as an accumulation
     neighbor_accumulated = 0
     normalizer = 0
     
+    # For each neighbor, predict their rating to the movie based on Collaborative Filtering formula,
+    # and add the value to the normalizer accumulation
     for neighbor in neighbors:
         neighbor_rating = movie_ratings[neighbor][movie] if movie in movie_ratings[neighbor] else 0
         neighbor_accumulated += neighbor_rating * user_correlation[neighbor]
         normalizer += abs(user_correlation[neighbor])
 
+    # Predict the rating with the normalized accumulated value
     return neighbor_accumulated / normalizer
