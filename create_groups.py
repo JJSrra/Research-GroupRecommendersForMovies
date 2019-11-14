@@ -134,6 +134,12 @@ if __name__ == "__main__":
     f.write(str(circumstantial_groups))
     f.close()
 
+    # Save train and test movies
+    pd.DataFrame(train_movies).to_csv(
+        "train_movies.csv", header=None, index=None)
+    pd.DataFrame(test_movies).to_csv(
+        "test_movies.csv", header=None, index=None)
+
     # Save train and test ratings by user
     f = open("train_ratings.txt", "w")
     f.write(str(train_ratings_by_user))
@@ -144,4 +150,5 @@ if __name__ == "__main__":
     f.close()
 
     # Saving Pearson Correlation Matrix
-    pd.DataFrame(pearson_matrix).to_csv("pearson_correlation_matrix.csv", header = None, index = None )
+    pd.DataFrame(pearson_matrix).to_csv(
+        "pearson_correlation_matrix.csv", header = None, index = None)
