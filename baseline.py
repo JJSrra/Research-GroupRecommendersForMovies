@@ -34,4 +34,7 @@ def predict_rating(user, neighbors, movie, movie_ratings, user_correlation):
         normalizer += abs(user_correlation[neighbor])
 
     # Predict the rating with the normalized accumulated value
-    return neighbor_accumulated / normalizer
+    if normalizer == 0:
+        return 0
+    else:
+        return neighbor_accumulated / normalizer
