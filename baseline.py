@@ -29,12 +29,12 @@ def predict_rating(user, neighbors, movie, movie_ratings, user_correlation):
     # For each neighbor, predict their rating to the movie based on Collaborative Filtering formula,
     # and add the value to the normalizer accumulation
     for neighbor in neighbors:
-        neighbor_rating = movie_ratings[neighbor][movie] if movie in movie_ratings[neighbor] else 0
+        neighbor_rating = movie_ratings[neighbor][movie] if movie in movie_ratings[neighbor] else 0.0
         neighbor_accumulated += neighbor_rating * user_correlation[neighbor]
         normalizer += abs(user_correlation[neighbor])
 
     # Predict the rating with the normalized accumulated value
-    if normalizer == 0:
-        return 0
+    if normalizer == 0.0:
+        return 0.0
     else:
         return neighbor_accumulated / normalizer
