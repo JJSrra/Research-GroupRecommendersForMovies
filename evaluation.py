@@ -2,7 +2,7 @@ import pandas as pd
 import baseline
 import combination_strategies
 
-def evaluate_baseline(groups, ratings_by_user, pearson, output_file):
+def generate_baseline_predictions(groups, ratings_by_user, pearson, output_file):
     movies_column = []
     groups_column = []
     avg_column = []

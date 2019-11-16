@@ -20,12 +20,15 @@ if __name__ == "__main__":
     test_movies = pd.read_csv("generated_data/test_movies.csv", header=None).to_numpy().flatten()
 
     # Random
-    evaluation.evaluate_baseline(random_groups, test_ratings_by_user, pearson, "generated_data/baseline_random_ratings.csv")
+    evaluation.generate_baseline_predictions(
+        random_groups, test_ratings_by_user, pearson, "generated_data/baseline_random_ratings.csv")
 
     # Buddies
-    evaluation.evaluate_baseline(buddies_groups, test_ratings_by_user, pearson, "generated_data/baseline_buddies_ratings.csv")
+    evaluation.generate_baseline_predictions(
+        buddies_groups, test_ratings_by_user, pearson, "generated_data/baseline_buddies_ratings.csv")
 
     # Circumstantial
-    evaluation.evaluate_baseline(circumstantial_groups, test_ratings_by_user, pearson, "generated_data/baseline_circumstantial_ratings.csv")
+    evaluation.generate_baseline_predictions(
+        circumstantial_groups, test_ratings_by_user, pearson, "generated_data/baseline_circumstantial_ratings.csv")
         
 
