@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import movielens_utils
+import evaluation
 
 if __name__ == "__main__":
 
@@ -120,6 +121,11 @@ if __name__ == "__main__":
             del random_groups[movie]
             del buddies_groups[movie]
             del circumstantial_groups[movie]
+
+    # Generate real ratings given by the groups for evaluation purposes
+    evaluation.generate_real_ratings(random_groups, test_ratings_by_user, "generated_data/real_random_ratings.csv")
+    evaluation.generate_real_ratings(buddies_groups, test_ratings_by_user, "generated_data/real_buddies_ratings.csv")
+    evaluation.generate_real_ratings(circumstantial_groups, test_ratings_by_user, "generated_data/real_circumstantial_ratings.csv")
 
     # File saving
     f = open("generated_data/random_groups.txt", "w")
