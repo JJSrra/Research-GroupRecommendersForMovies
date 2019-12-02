@@ -31,7 +31,7 @@ def predict_rating(user, neighbors, movie, movie_ratings, user_correlation):
     for neighbor in neighbors:
         neighbor_rating = movie_ratings[neighbor][movie] if movie in movie_ratings[neighbor] else 0.0
         neighbor_accumulated += neighbor_rating * user_correlation[neighbor]
-        normalizer += abs(user_correlation[neighbor])
+        normalizer += 0.0 if neighbor_rating == 0.0 else abs(user_correlation[neighbor])
 
     # Predict the rating with the normalized accumulated value
     if normalizer == 0.0:
