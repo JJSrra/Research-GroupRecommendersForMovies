@@ -41,104 +41,48 @@ if __name__ == "__main__":
     users_per_group = 5
 
     # RANDOM GROUPS
-    random_groups = {}
+    random_groups = []
+    available_users = np.arange(1,611) # There are 610 users, with IDs starting at 1 and ending at 610
 
-    for movie in test_movies:
-        random_groups[movie] = []
-        available_users = movielens_utils.users_who_have_seen(movie, test_ratings_by_user)
+    while len(available_users) >= users_per_group:
+        available_users = np.random.permutation(available_users)
+        selected_users = available_users[:users_per_group]
+        available_users = available_users[users_per_group:]
 
-        while len(available_users) >= users_per_group:
-            available_users = np.random.permutation(available_users)
-            selected_users = available_users[:users_per_group]
-            available_users = available_users[users_per_group:]
-
-            random_groups[movie].append(selected_users)
+        random_groups.append(selected_users)
 
     # BUDDIES GROUPS
-    buddies_groups = {}
+    buddies_groups = []
+    available_users = np.arange(1,611)
 
-    for movie in test_movies:
-        buddies_groups[movie] = []
-        available_users = movielens_utils.users_who_have_seen(movie, test_ratings_by_user)
+    while len(available_users) >= users_per_group:
+        available_users = np.random.permutation(available_users)
+        current_user = available_users[0]
 
-        while len(available_users) >= users_per_group:
-            current_user = available_users[0]
-            selected_users = [current_user]
+        # Sort the remaining users based on their correlation with the current user
+        sorted_by_pearson = sorted(
+            available_users[1:], key=lambda user: pearson_matrix[current_user, user], reverse=True)
 
-            # Sort the remaining users based on their correlation with the current user
-            sorted_by_pearson = sorted(
-                available_users[1:], key=lambda user: pearson_matrix[current_user, user], reverse=True)
+        # We now consider buddies as users with the highest correlation indicated by the Pearson Correlation Matrix
+        potential_buddies = sorted_by_pearson[:users_per_group-1]
+        potential_buddies.append(current_user)
 
-            # If a user has seen at least 1 movies in common with the current user (in the training set),
-            # it is considered a buddy (considering the high correlation indicated by the Pearson Correlation Matrix)
-            for user in sorted_by_pearson:
-                if movielens_utils.have_seen_X_common_movies(1, current_user, user, train_ratings_by_user):
-                    selected_users.append(user)
-                    if len(selected_users) == users_per_group:
-                        break
+        # Form a group with the potential buddies
+        buddies_groups.append(np.array(potential_buddies))
 
-            # Form a group with the selected users if there are enough
-            if len(selected_users) == users_per_group:
-                buddies_groups[movie].append(np.array(selected_users))
-
-                # And remove these users from the pool
-                available_users = np.setdiff1d(available_users, selected_users)
-            else: # Just remove the current user 
-                available_users = np.setdiff1d(available_users, current_user)
-
-    # CIRCUMSTANTIAL GROUPS
-    circumstantial_groups = {}
-
-    for movie in test_movies:
-        circumstantial_groups[movie] = []
-        available_users = movielens_utils.users_who_have_seen(movie, test_ratings_by_user)
-
-        while len(available_users) >= users_per_group:
-            available_users = np.random.permutation(available_users)
-            current_user = available_users[0]
-            selected_users = [current_user]
-
-            # If a user has seen at least 4 movies in common with the current user, they are considered to
-            # be in the same circumstantial group
-            for user in available_users[1:]:
-                if movielens_utils.have_seen_X_common_movies(4, current_user, user, train_ratings_by_user):
-                    selected_users.append(user)
-                    if len(selected_users) == users_per_group:
-                        break
-
-            # If there are enough users, form a circumstantial group
-            if len(selected_users) == users_per_group:
-                circumstantial_groups[movie].append(np.array(selected_users))
-
-                # And remove these users from the pool
-                available_users = np.setdiff1d(available_users, selected_users)
-            else:  # Just remove the current user
-                available_users = np.setdiff1d(available_users, current_user)
-
-    # Remove from the experiment any test movie without groups in any of the criteria
-    for movie in test_movies:
-        if len(buddies_groups[movie]) == 0 | len(circumstantial_groups[movie]) == 0:
-            del random_groups[movie]
-            del buddies_groups[movie]
-            del circumstantial_groups[movie]
+        # And remove these users from the pool
+        available_users = np.setdiff1d(available_users, potential_buddies)
 
     # Generate real ratings given by the groups for evaluation purposes
-    evaluation.generate_real_ratings(random_groups, test_ratings_by_user, "generated_data/real_random_ratings.csv")
-    evaluation.generate_real_ratings(buddies_groups, test_ratings_by_user, "generated_data/real_buddies_ratings.csv")
-    evaluation.generate_real_ratings(circumstantial_groups, test_ratings_by_user, "generated_data/real_circumstantial_ratings.csv")
+    # evaluation.generate_real_ratings(random_groups, test_ratings_by_user, "generated_data/real_random_ratings.csv")
+    # evaluation.generate_real_ratings(buddies_groups, test_ratings_by_user, "generated_data/real_buddies_ratings.csv")
 
     # File saving
-    f = open("generated_data/random_groups.txt", "w")
-    f.write(str(random_groups))
-    f.close()
+    pd.DataFrame(random_groups).to_csv(
+        "generated_data/random_groups.csv", header=None, index=None)
 
-    f = open("generated_data/buddies_groups.txt", "w")
-    f.write(str(buddies_groups))
-    f.close()
-
-    f = open("generated_data/circumstantial_groups.txt", "w")
-    f.write(str(circumstantial_groups))
-    f.close()
+    pd.DataFrame(buddies_groups).to_csv(
+        "generated_data/buddies_groups.csv", header=None, index=None)
 
     # Save train and test movies
     pd.DataFrame(train_movies).to_csv(
