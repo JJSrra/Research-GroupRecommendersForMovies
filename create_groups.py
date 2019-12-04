@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import movielens_utils
 import evaluation
+import os
 
 if __name__ == "__main__":
 
@@ -73,9 +74,35 @@ if __name__ == "__main__":
         # And remove these users from the pool
         available_users = np.setdiff1d(available_users, potential_buddies)
 
+    # Select evaluable movies from each group
+    random_evaluated_movies = {}
+
+    for i in range(0, len(random_groups)):
+        evaluated_movies = movielens_utils.movies_that_at_least_3_have_seen(random_groups[i], test_movies, test_ratings_by_user)
+        if len(evaluated_movies) > 0:
+            random_evaluated_movies[i] = evaluated_movies 
+
+    os.makedirs("generated_data", exist_ok=True)
+
+    f = open("generated_data/random_evaluated_movies.txt", "w")
+    f.write(str(random_evaluated_movies))
+    f.close()
+
+    buddies_evaluated_movies = {}
+
+    for i in range(0, len(buddies_groups)):
+        evaluated_movies = movielens_utils.movies_that_at_least_3_have_seen(buddies_groups[i], test_movies, test_ratings_by_user)
+        if len(evaluated_movies) > 0:
+            buddies_evaluated_movies[i] = evaluated_movies
+
+    f = open("generated_data/buddies_evaluated_movies.txt", "w")
+    f.write(str(buddies_evaluated_movies))
+    f.close()
+
     # Generate real ratings given by the groups for evaluation purposes
-    # evaluation.generate_real_ratings(random_groups, test_ratings_by_user, "generated_data/real_random_ratings.csv")
-    # evaluation.generate_real_ratings(buddies_groups, test_ratings_by_user, "generated_data/real_buddies_ratings.csv")
+    os.makedirs("generated_data/rankings", exist_ok=True)
+    evaluation.generate_real_ratings(random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/real_random_")
+    evaluation.generate_real_ratings(buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/real_buddies_")
 
     # File saving
     pd.DataFrame(random_groups).to_csv(
