@@ -78,7 +78,7 @@ if __name__ == "__main__":
     random_evaluated_movies = {}
 
     for i in range(0, len(random_groups)):
-        evaluated_movies = movielens_utils.movies_that_at_least_3_have_seen(random_groups[i], test_movies, test_ratings_by_user)
+        evaluated_movies = movielens_utils.movies_that_at_least_X_have_seen(3, random_groups[i], test_movies, test_ratings_by_user)
         if len(evaluated_movies) > 0:
             random_evaluated_movies[i] = evaluated_movies 
 
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     buddies_evaluated_movies = {}
 
     for i in range(0, len(buddies_groups)):
-        evaluated_movies = movielens_utils.movies_that_at_least_3_have_seen(buddies_groups[i], test_movies, test_ratings_by_user)
+        evaluated_movies = movielens_utils.movies_that_at_least_X_have_seen(3, buddies_groups[i], test_movies, test_ratings_by_user)
         if len(evaluated_movies) > 0:
             buddies_evaluated_movies[i] = evaluated_movies
 

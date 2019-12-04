@@ -24,7 +24,6 @@ def generate_real_ratings(groups, movies_by_group, ratings_by_user, output_file)
 
         if i in movies_by_group.keys(): # If there is at least 1 movie that the group have seen in common
             for movie in movies_by_group[i]:
-                print("Group {}, movie {}".format(i, movie))
                 for user in groups[i]:
                     group_ratings.append(0.0 if movie not in ratings_by_user[user] else ratings_by_user[user][movie])
 
