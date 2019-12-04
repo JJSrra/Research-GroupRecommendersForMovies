@@ -9,9 +9,21 @@ if __name__ == "__main__":
     read_dict = open('generated_data/random_evaluated_movies.txt', 'r').read()
     random_evaluated_movies = eval(read_dict)
     
+    avg_real_rankings = eval(open('generated_data/rankings/real_random_avg.txt', 'r').read())
+    min_real_rankings = eval(open('generated_data/rankings/real_random_min.txt', 'r').read())
+    max_real_rankings = eval(open('generated_data/rankings/real_random_max.txt', 'r').read())
+    maj_real_rankings = eval(open('generated_data/rankings/real_random_maj.txt', 'r').read())
+    real_random_rankings = {"avg": avg_real_rankings, "min": min_real_rankings, "max": max_real_rankings, "maj": maj_real_rankings}
+
     buddies_groups = pd.read_csv("generated_data/buddies_groups.csv", header=None).to_numpy()
     read_dict = open('generated_data/buddies_evaluated_movies.txt', 'r').read()
     buddies_evaluated_movies = eval(read_dict)
+
+    avg_real_rankings = eval(open('generated_data/rankings/real_buddies_avg.txt', 'r').read())
+    min_real_rankings = eval(open('generated_data/rankings/real_buddies_min.txt', 'r').read())
+    max_real_rankings = eval(open('generated_data/rankings/real_buddies_max.txt', 'r').read())
+    maj_real_rankings = eval(open('generated_data/rankings/real_buddies_maj.txt', 'r').read())
+    real_buddies_rankings = {"avg": avg_real_rankings, "min": min_real_rankings, "max": max_real_rankings, "maj": maj_real_rankings}
 
     read_dict = open('generated_data/test_ratings.txt', 'r').read()
     test_ratings_by_user = eval(read_dict)
@@ -25,14 +37,14 @@ if __name__ == "__main__":
     predicted_random_rankings = evaluation.generate_baseline_predictions(
         random_groups, random_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_random_")
     
-    # evaluation.evaluate_predictions(
-    #     predicted_random_rankings, "random", "generated_data/baseline_random_rmse.csv")
+    evaluation.evaluate_predictions(
+        predicted_random_rankings, real_random_rankings, "generated_data/baseline_random_ndcg.csv")
 
     # Buddies
-    predicted_buddies_ratings = evaluation.generate_baseline_predictions(
+    predicted_buddies_rankings = evaluation.generate_baseline_predictions(
         buddies_groups, buddies_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_buddies_")
 
-    # evaluation.evaluate_predictions(
-    #     predicted_buddies_ratings, "buddies", "generated_data/baseline_buddies_rmse.csv")
+    evaluation.evaluate_predictions(
+        predicted_buddies_rankings, real_buddies_rankings, "generated_data/baseline_buddies_ndcg.csv")
         
 
