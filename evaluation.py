@@ -2,90 +2,124 @@ import pandas as pd
 import numpy as np
 import baseline
 import combination_strategies
+from sklearn import metrics
 
-def generate_real_ratings(groups, ratings_by_user, output_file):
-    movies_column = []
-    groups_column = []
-    avg_column = []
-    min_column = []
-    max_column = []
-    maj_column = []
+def sort_movies_by_ranking(ratings, movies):
+    order = np.argsort(np.array(ratings))
+    ranking = np.array(movies)[order]
+    return ranking
 
-    for movie in groups.keys():
-        for group in groups[movie]:
-            group_ratings = []
-            for user in group:
-                group_ratings.append(ratings_by_user[user][movie])
+def generate_real_ratings(groups, movies_by_group, ratings_by_user, output_file):
+    
+    avg_rankings = {}
+    min_rankings = {}
+    max_rankings = {}
+    maj_rankings = {}
 
-            movies_column.append(movie)
-            groups_column.append(group)
-            avg_column.append(combination_strategies.avg(group_ratings))
-            min_column.append(combination_strategies.min(group_ratings))
-            max_column.append(combination_strategies.max(group_ratings))
-            maj_column.append(combination_strategies.maj(group_ratings))
+    for i in range(0, len(groups)):
+        avg_values = np.array([])
+        min_values = np.array([])
+        max_values = np.array([])
+        maj_values = np.array([])
+        group_ratings = []
 
-    ratings_dataframe = pd.DataFrame()
-    ratings_dataframe[0] = movies_column
-    ratings_dataframe[1] = groups_column
-    ratings_dataframe[2] = avg_column
-    ratings_dataframe[3] = min_column
-    ratings_dataframe[4] = max_column
-    ratings_dataframe[5] = maj_column
+        if i in movies_by_group.keys(): # If there is at least 1 movie that the group have seen in common
+            for movie in movies_by_group[i]:
+                for user in groups[i]:
+                    group_ratings.append(0.0 if movie not in ratings_by_user[user] else ratings_by_user[user][movie])
 
-    ratings_dataframe.to_csv(output_file, header=None, index=None)
+                avg_values = np.append(avg_values, combination_strategies.avg(group_ratings))
+                min_values = np.append(min_values, combination_strategies.min(group_ratings))
+                max_values = np.append(max_values, combination_strategies.max(group_ratings))
+                maj_values = np.append(maj_values, combination_strategies.maj(group_ratings))
 
-def generate_baseline_predictions(groups, ratings_by_user, pearson, output_file):
-    movies_column = []
-    groups_column = []
-    avg_column = []
-    min_column = []
-    max_column = []
-    maj_column = []
+            avg_rankings[i] = sort_movies_by_ranking(avg_values, movies_by_group[i])
+            min_rankings[i] = sort_movies_by_ranking(min_values, movies_by_group[i])
+            max_rankings[i] = sort_movies_by_ranking(max_values, movies_by_group[i])
+            maj_rankings[i] = sort_movies_by_ranking(maj_values, movies_by_group[i])
 
-    for movie in groups.keys():
-        for group in groups[movie]:
-            group_ratings = baseline.predict_group_individual_ratings_for_movie(
-                group, movie, ratings_by_user, pearson)
-
-            movies_column.append(movie)
-            groups_column.append(group)
-            avg_column.append(combination_strategies.avg(group_ratings))
-            min_column.append(combination_strategies.min(group_ratings))
-            max_column.append(combination_strategies.max(group_ratings))
-            maj_column.append(combination_strategies.maj(group_ratings))
-
-    ratings_dataframe = pd.DataFrame()
-    ratings_dataframe[0] = movies_column
-    ratings_dataframe[1] = groups_column
-    ratings_dataframe[2] = avg_column
-    ratings_dataframe[3] = min_column
-    ratings_dataframe[4] = max_column
-    ratings_dataframe[5] = maj_column
-
-    ratings_dataframe.to_csv(output_file, header=None, index=None)
-    return ratings_dataframe
-
-def evaluate_predictions(predicted_dataframe, real_dataframe, output_file):
-    predicted_avg = predicted_dataframe[2].to_numpy()
-    predicted_min = predicted_dataframe[3].to_numpy()
-    predicted_max = predicted_dataframe[4].to_numpy()
-    predicted_maj = predicted_dataframe[5].to_numpy()
-    real_avg = real_dataframe[2].to_numpy()
-    real_min = real_dataframe[3].to_numpy()
-    real_max = real_dataframe[4].to_numpy()
-    real_maj = real_dataframe[5].to_numpy()
-
-    rmse_avg = rmse(predicted_avg, real_avg)
-    rmse_min = rmse(predicted_min, real_min)
-    rmse_max = rmse(predicted_max, real_max)
-    rmse_maj = rmse(predicted_maj, real_maj)
-
-    f = open(output_file, "w")
-    f.write("AVG: {}\n".format(rmse_avg))
-    f.write("MIN: {}\n".format(rmse_min))
-    f.write("MAX: {}\n".format(rmse_max))
-    f.write("MAJ: {}\n".format(rmse_maj))
+    f = open(output_file + "avg.txt", "w")
+    f.write(str(avg_rankings))
     f.close()
 
-def rmse(predicted, real):
-    return np.sqrt(((predicted - real) ** 2).mean())
+    f = open(output_file + "min.txt", "w")
+    f.write(str(min_rankings))
+    f.close()
+
+    f = open(output_file + "max.txt", "w")
+    f.write(str(max_rankings))
+    f.close()
+
+    f = open(output_file + "maj.txt", "w")
+    f.write(str(maj_rankings))
+    f.close()
+
+
+def generate_baseline_predictions(groups, movies_by_group, ratings_by_user, pearson, output_file):
+    
+    avg_rankings = {}
+    min_rankings = {}
+    max_rankings = {}
+    maj_rankings = {}
+
+    for i in range(0, len(groups)):
+        avg_values = np.array([])
+        min_values = np.array([])
+        max_values = np.array([])
+        maj_values = np.array([])
+
+        if i in movies_by_group.keys():  # If there is at least 1 movie that the group have seen in common
+            for movie in movies_by_group[i]:
+                individual_group_ratings = baseline.predict_group_individual_ratings_for_movie(
+                    groups[i], movie, ratings_by_user, pearson)
+
+                avg_values = np.append(avg_values, combination_strategies.avg(individual_group_ratings))
+                min_values = np.append(min_values, combination_strategies.min(individual_group_ratings))
+                max_values = np.append(max_values, combination_strategies.max(individual_group_ratings))
+                maj_values = np.append(maj_values, combination_strategies.maj(individual_group_ratings))
+
+            avg_rankings[i] = sort_movies_by_ranking(avg_values, movies_by_group[i])
+            min_rankings[i] = sort_movies_by_ranking(min_values, movies_by_group[i])
+            max_rankings[i] = sort_movies_by_ranking(max_values, movies_by_group[i])
+            maj_rankings[i] = sort_movies_by_ranking(maj_values, movies_by_group[i])
+    
+    f = open(output_file + "avg.txt", "w")
+    f.write(str(avg_rankings))
+    f.close()
+
+    f = open(output_file + "min.txt", "w")
+    f.write(str(min_rankings))
+    f.close()
+
+    f = open(output_file + "max.txt", "w")
+    f.write(str(max_rankings))
+    f.close()
+
+    f = open(output_file + "maj.txt", "w")
+    f.write(str(maj_rankings))
+    f.close()
+
+    return {"avg": avg_rankings, "min": min_rankings, "max": max_rankings, "maj": maj_rankings}
+
+def evaluate_predictions(predicted_rankings, real_rankings, output_file):
+    ndcg_avg = calculate_mean_ndcg(real_rankings["avg"], predicted_rankings["avg"], 122)
+    ndcg_min = calculate_mean_ndcg(real_rankings["min"], predicted_rankings["min"], 122)
+    ndcg_max = calculate_mean_ndcg(real_rankings["max"], predicted_rankings["max"], 122)
+    ndcg_maj = calculate_mean_ndcg(real_rankings["maj"], predicted_rankings["maj"], 122)
+
+    f = open(output_file, "w")
+    f.write("nDCG Avg: {}\n".format(ndcg_avg))
+    f.write("nDCG Min: {}\n".format(ndcg_min))
+    f.write("nDCG Max: {}\n".format(ndcg_max))
+    f.write("nDCG Maj: {}\n".format(ndcg_maj))
+    f.close()
+
+def calculate_mean_ndcg(real_rankings, predicted_rankings, max_groups):
+    ndcg_results = []
+    for i in range(0, max_groups):
+        if i in real_rankings.keys():
+            result = 1 if len(real_rankings[i]) == 1 else metrics.ndcg_score(
+                np.array([real_rankings[i]]), np.array([predicted_rankings[i]]))
+            ndcg_results.append(result)
+
+    return np.mean(ndcg_results)

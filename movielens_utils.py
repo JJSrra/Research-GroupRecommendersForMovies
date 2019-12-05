@@ -75,3 +75,18 @@ def have_seen_X_common_movies(num_movies, user1, user2, ratings_by_user):
     user2_movies = ratings_by_user[user2].keys()
 
     return len(user1_movies & user2_movies) >= num_movies
+
+def movies_that_at_least_X_have_seen(num_movies, group, movies, ratings_by_user):
+
+    result_movies = []
+
+    for movie in movies:
+        movie_seen_times = 0
+        for user in group:
+            if movie in ratings_by_user[user].keys():
+                movie_seen_times += 1
+
+        if movie_seen_times >= num_movies:
+            result_movies.append(movie)
+
+    return result_movies
