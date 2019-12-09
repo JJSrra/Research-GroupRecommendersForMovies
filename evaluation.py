@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import baseline
 import combination_strategies
+import pogrs
 from sklearn import metrics
 
 def sort_movies_by_ranking(ratings, movies):
@@ -100,6 +101,19 @@ def generate_baseline_predictions(groups, movies_by_group, ratings_by_user, pear
     f.close()
 
     return {"avg": avg_rankings, "min": min_rankings, "max": max_rankings, "maj": maj_rankings}
+
+def generate_pogrs_predictions(groups, movies_by_group, ratings_by_user, output_file):
+
+    pogrs_rankings = {}
+    for i in range(0, len(groups)):
+        if i in movies_by_group.keys(): # If there is at least 1 movie that the group have seen in common
+            pogrs_rankings[i] = pogrs.predict_ranking_from_group(groups[i], movies_by_group[i], ratings_by_user)
+
+    f = open(output_file, "w")
+    f.write(str(pogrs_rankings))
+    f.close()
+
+    return {"avg": pogrs_rankings, "min": pogrs_rankings, "max": pogrs_rankings, "maj": pogrs_rankings}
 
 def evaluate_predictions(predicted_rankings, real_rankings, output_file):
     ndcg_avg = calculate_mean_ndcg(real_rankings["avg"], predicted_rankings["avg"], 122)

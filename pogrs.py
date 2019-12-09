@@ -5,19 +5,21 @@ import collections
 
 def predict_ranking_from_group(group, movies, movie_ratings):
     preference_matrix = get_preference_matrix(group, movies, movie_ratings)
-
-
+    user_status_list = [get_user_status(preference_matrix, user) for user in range(0, len(group))]
+    highest_status_user = np.argsort(-np.array(user_status_list))[0] # Negated for descending order
+    return preference_matrix[highest_status_user]
+    
 def get_preference_matrix(users, movies, movie_ratings):
-    preference_matrix = np.array([])
-    for user in users:
+    preference_matrix = np.empty([len(users), len(movies)])
+    for i in range(0, len(users)):
         user_ratings = []
         for movie in movies:
-            user_ratings.append(movie_ratings[user][movie])
+            user_ratings.append(0.0 if movie not in movie_ratings[users[i]].keys() else movie_ratings[users[i]][movie])
 
-        user_ranking = evaluation.sort_movies_by_ranking(user_ratings, movies)
-        preference_matrix = np.append(preference_matrix, user_ranking)
+        user_ranking = evaluation.sort_movies_by_ranking(np.array(user_ratings), movies)
+        preference_matrix[i] = user_ranking
 
-    return preference_matrix.reshape(len(users), len(movies))
+    return preference_matrix.astype(int)
 
 def get_user_status(preference_matrix, user_index):
     evaluated_movies = preference_matrix.shape[1]
