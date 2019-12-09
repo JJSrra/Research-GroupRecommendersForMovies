@@ -5,7 +5,7 @@ import combination_strategies
 from sklearn import metrics
 
 def sort_movies_by_ranking(ratings, movies):
-    order = np.argsort(np.array(ratings))
+    order = np.argsort(np.array((-ratings))) # Negated for descending order
     ranking = np.array(movies)[order]
     return ranking
 
