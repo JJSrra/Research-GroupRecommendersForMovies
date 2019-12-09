@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import evaluation
+import pogrs
 
 if __name__ == "__main__":
     array = np.array
@@ -34,17 +35,31 @@ if __name__ == "__main__":
     # ===================== BASELINE =====================
 
     # Random
-    predicted_random_rankings = evaluation.generate_baseline_predictions(
+    predicted_random_baseline_rankings = evaluation.generate_baseline_predictions(
         random_groups, random_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_random_")
     
     evaluation.evaluate_predictions(
-        predicted_random_rankings, real_random_rankings, "generated_data/baseline_random_ndcg.csv")
+        predicted_random_baseline_rankings, real_random_rankings, "generated_data/baseline_random_ndcg.csv")
 
     # Buddies
-    predicted_buddies_rankings = evaluation.generate_baseline_predictions(
+    predicted_buddies_baseline_rankings = evaluation.generate_baseline_predictions(
         buddies_groups, buddies_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_buddies_")
 
     evaluation.evaluate_predictions(
-        predicted_buddies_rankings, real_buddies_rankings, "generated_data/baseline_buddies_ndcg.csv")
-        
+        predicted_buddies_baseline_rankings, real_buddies_rankings, "generated_data/baseline_buddies_ndcg.csv")
 
+    # ===================== POGRS =====================
+
+    # Random
+    predicted_random_pogrs_rankings = evaluation.generate_pogrs_predictions(
+        random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_pogrs.txt")
+
+    evaluation.evaluate_predictions(
+        predicted_random_pogrs_rankings, real_random_rankings, "generated_data/pogrs_random_ndcg.csv")
+
+    # Buddies
+    predicted_buddies_pogrs_rankings = evaluation.generate_pogrs_predictions(
+        buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_pogrs.txt")
+
+    evaluation.evaluate_predictions(
+        predicted_buddies_pogrs_rankings, real_buddies_rankings, "generated_data/pogrs_buddies_ndcg.csv")
