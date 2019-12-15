@@ -66,15 +66,31 @@ if __name__ == "__main__":
     # ===================== EMPATHY =====================
     
     # Random
-    predicted_random_empathy_rankings = evaluation.generate_empathy_predictions(
-        random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_empathy.txt")
+    # predicted_random_empathy_rankings = evaluation.generate_empathy_predictions(
+    #     random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_empathy.txt")
+
+    # evaluation.evaluate_predictions(
+    #     predicted_random_empathy_rankings, real_random_rankings, "generated_data/empathy_random_ndcg.csv")
+
+    # # Buddies
+    # predicted_buddies_empathy_rankings = evaluation.generate_empathy_predictions(
+    #     buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_empathy.txt")
+
+    # evaluation.evaluate_predictions(
+    #     predicted_buddies_empathy_rankings, real_buddies_rankings, "generated_data/empathy_buddies_ndcg.csv")
+
+    # ===================== CINEPHILE =====================
+
+    # Random
+    predicted_random_cinephile_rankings = evaluation.generate_cinephile_predictions(
+        random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_cinephile.txt")
 
     evaluation.evaluate_predictions(
-        predicted_random_empathy_rankings, real_random_rankings, "generated_data/empathy_random_ndcg.csv")
+        predicted_random_cinephile_rankings, real_random_rankings, "generated_data/cinephile_random_ndcg.csv")
 
     # Buddies
-    predicted_buddies_empathy_rankings = evaluation.generate_empathy_predictions(
-        buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_empathy.txt")
+    predicted_buddies_cinephile_rankings = evaluation.generate_cinephile_predictions(
+        buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_cinephile.txt")
 
     evaluation.evaluate_predictions(
-        predicted_buddies_empathy_rankings, real_buddies_rankings, "generated_data/empathy_buddies_ndcg.csv")
+        predicted_buddies_cinephile_rankings, real_buddies_rankings, "generated_data/cinephile_buddies_ndcg.csv")
