@@ -6,10 +6,14 @@ def predict_ranking_from_group(group, movies, movie_ratings):
     weights = np.repeat(1/len(group), len(group))
     ratings_matrix = get_ratings_matrix(group, movies, movie_ratings)
 
-    chosen_movie, movies, ratings_matrix, weights = choose_movie_and_update_weights(
-        ratings_matrix, movies, group, weights, movie_ratings)
+    while len(movies) > 1:
+        chosen_movie, movies, ratings_matrix, weights = choose_movie_and_update_weights(
+            ratings_matrix, movies, group, weights, movie_ratings)
 
-    ranking.append(chosen_movie)
+        ranking.append(chosen_movie)
+
+    ranking.append(movies[0])
+    return ranking
 
 def get_ratings_matrix(users, movies, movie_ratings):
     ratings_matrix = np.empty([len(users), len(movies)])
