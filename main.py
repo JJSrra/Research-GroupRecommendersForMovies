@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import evaluation
+import similarity
 
 if __name__ == "__main__":
     array = np.array
@@ -98,15 +99,31 @@ if __name__ == "__main__":
     # ===================== OPTIMIST =====================
 
     # Random
-    predicted_random_optimist_rankings = evaluation.generate_optimist_predictions(
-        random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_optimist.txt")
+    # predicted_random_optimist_rankings = evaluation.generate_optimist_predictions(
+    #     random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_optimist.txt")
+
+    # evaluation.evaluate_predictions(
+    #     predicted_random_optimist_rankings, real_random_rankings, "generated_data/optimist_random_ndcg.csv")
+
+    # # Buddies
+    # predicted_buddies_optimist_rankings = evaluation.generate_optimist_predictions(
+    #     buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_optimist.txt")
+
+    # evaluation.evaluate_predictions(
+    #     predicted_buddies_optimist_rankings, real_buddies_rankings, "generated_data/optimist_buddies_ndcg.csv")
+
+    # ===================== SIMILARITY =====================
+    
+    # Random
+    predicted_random_similarity_rankings = evaluation.generate_similarity_predictions(
+        random_groups, random_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_random_similarity.txt")
 
     evaluation.evaluate_predictions(
-        predicted_random_optimist_rankings, real_random_rankings, "generated_data/optimist_random_ndcg.csv")
+        predicted_random_similarity_rankings, real_random_rankings, "generated_data/similarity_random_ndcg.csv")
 
     # Buddies
-    predicted_buddies_optimist_rankings = evaluation.generate_optimist_predictions(
-        buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_optimist.txt")
+    predicted_buddies_similarity_rankings = evaluation.generate_similarity_predictions(
+        buddies_groups, buddies_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_buddies_similarity.txt")
 
     evaluation.evaluate_predictions(
-        predicted_buddies_optimist_rankings, real_buddies_rankings, "generated_data/optimist_buddies_ndcg.csv")
+        predicted_buddies_similarity_rankings, real_buddies_rankings, "generated_data/similarity_buddies_ndcg.csv")
