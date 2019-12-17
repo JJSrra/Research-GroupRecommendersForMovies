@@ -5,6 +5,7 @@ import combination_strategies
 import pogrs
 import empathy
 import cinephile
+import optimist
 from sklearn import metrics
 
 def sort_movies_by_ranking(ratings, movies):
@@ -142,6 +143,19 @@ def generate_cinephile_predictions(groups, movies_by_group, ratings_by_user, out
     f.close()
 
     return {"avg": cinephile_rankings, "min": cinephile_rankings, "max": cinephile_rankings, "maj": cinephile_rankings}
+
+def generate_optimist_predictions(groups, movies_by_group, ratings_by_user, output_file):
+
+    optimist_rankings = {}
+    for i in range(0, len(groups)):
+        if i in movies_by_group.keys(): # If there is at least 1 movie that the group have seen in common
+            optimist_rankings[i] = optimist.predict_ranking_from_group(groups[i], movies_by_group[i], ratings_by_user)
+
+    f = open(output_file, "w")
+    f.write(str(optimist_rankings))
+    f.close()
+
+    return {"avg": optimist_rankings, "min": optimist_rankings, "max": optimist_rankings, "maj": optimist_rankings}
 
 def evaluate_predictions(predicted_rankings, real_rankings, output_file):
     ndcg_avg = calculate_mean_ndcg(real_rankings["avg"], predicted_rankings["avg"], 122)
