@@ -177,11 +177,23 @@ def evaluate_predictions(predicted_rankings, real_rankings, output_file):
     ndcg_max = calculate_mean_ndcg(real_rankings["max"], predicted_rankings["max"], 122)
     ndcg_maj = calculate_mean_ndcg(real_rankings["maj"], predicted_rankings["maj"], 122)
 
-    f = open(output_file, "w")
+    f = open(output_file + "ndcg.csv", "w")
     f.write("nDCG Avg: {}\n".format(ndcg_avg))
     f.write("nDCG Min: {}\n".format(ndcg_min))
     f.write("nDCG Max: {}\n".format(ndcg_max))
     f.write("nDCG Maj: {}\n".format(ndcg_maj))
+    f.close()
+    
+    mae_avg = calculate_mean_absolute_error(real_rankings["avg"], predicted_rankings["avg"], 122)
+    mae_min = calculate_mean_absolute_error(real_rankings["min"], predicted_rankings["min"], 122)
+    mae_max = calculate_mean_absolute_error(real_rankings["max"], predicted_rankings["max"], 122)
+    mae_maj = calculate_mean_absolute_error(real_rankings["maj"], predicted_rankings["maj"], 122)
+
+    f = open(output_file + "mae.csv", "w")
+    f.write("MAE Avg: {}\n".format(mae_avg))
+    f.write("MAE Min: {}\n".format(mae_min))
+    f.write("MAE Max: {}\n".format(mae_max))
+    f.write("MAE Maj: {}\n".format(mae_maj))
     f.close()
 
 def calculate_mean_ndcg(real_rankings, predicted_rankings, max_groups):
@@ -193,3 +205,11 @@ def calculate_mean_ndcg(real_rankings, predicted_rankings, max_groups):
             ndcg_results.append(result)
 
     return np.mean(ndcg_results)
+
+def calculate_mean_absolute_error(real_rankings, predicted_rankings, max_groups):
+    mae_results = []
+    for i in range(0, max_groups):
+        if i in real_rankings.keys():
+            mae_results.append(metrics.mean_absolute_error(real_rankings[i], predicted_rankings[i]))
+
+    return np.mean(mae_results)
