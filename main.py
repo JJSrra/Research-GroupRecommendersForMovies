@@ -34,83 +34,83 @@ if __name__ == "__main__":
 
     # ===================== BASELINE =====================
 
-    # # Random
-    # predicted_random_baseline_rankings = evaluation.generate_baseline_predictions(
-    #     random_groups, random_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_random_")
+    # Random
+    predicted_random_baseline_rankings = evaluation.generate_baseline_predictions(
+        random_groups, random_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_random_")
     
-    # evaluation.evaluate_predictions(
-    #     predicted_random_baseline_rankings, real_random_rankings, "generated_data/baseline_random_ndcg.csv")
+    evaluation.evaluate_predictions(
+        predicted_random_baseline_rankings, real_random_rankings, "generated_data/baseline_random_")
 
-    # # Buddies
-    # predicted_buddies_baseline_rankings = evaluation.generate_baseline_predictions(
-    #     buddies_groups, buddies_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_buddies_")
+    # Buddies
+    predicted_buddies_baseline_rankings = evaluation.generate_baseline_predictions(
+        buddies_groups, buddies_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_buddies_")
 
-    # evaluation.evaluate_predictions(
-    #     predicted_buddies_baseline_rankings, real_buddies_rankings, "generated_data/baseline_buddies_ndcg.csv")
+    evaluation.evaluate_predictions(
+        predicted_buddies_baseline_rankings, real_buddies_rankings, "generated_data/baseline_buddies_")
 
-    # # ===================== POGRS =====================
+    # ===================== POGRS =====================
 
-    # # Random
-    # predicted_random_pogrs_rankings = evaluation.generate_pogrs_predictions(
-    #     random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_pogrs.txt")
+    # Random
+    predicted_random_pogrs_rankings = evaluation.generate_pogrs_predictions(
+        random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_pogrs.txt")
 
-    # evaluation.evaluate_predictions(
-    #     predicted_random_pogrs_rankings, real_random_rankings, "generated_data/pogrs_random_ndcg.csv")
+    evaluation.evaluate_predictions(
+        predicted_random_pogrs_rankings, real_random_rankings, "generated_data/pogrs_random_")
 
-    # # Buddies
-    # predicted_buddies_pogrs_rankings = evaluation.generate_pogrs_predictions(
-    #     buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_pogrs.txt")
+    # Buddies
+    predicted_buddies_pogrs_rankings = evaluation.generate_pogrs_predictions(
+        buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_pogrs.txt")
 
-    # evaluation.evaluate_predictions(
-    #     predicted_buddies_pogrs_rankings, real_buddies_rankings, "generated_data/pogrs_buddies_ndcg.csv")
+    evaluation.evaluate_predictions(
+        predicted_buddies_pogrs_rankings, real_buddies_rankings, "generated_data/pogrs_buddies_")
 
     # ===================== EMPATHY =====================
     
     # Random
-    # predicted_random_empathy_rankings = evaluation.generate_empathy_predictions(
-    #     random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_empathy.txt")
+    predicted_random_empathy_rankings = evaluation.generate_empathy_predictions(
+        random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_empathy.txt")
 
-    # evaluation.evaluate_predictions(
-    #     predicted_random_empathy_rankings, real_random_rankings, "generated_data/empathy_random_ndcg.csv")
+    evaluation.evaluate_predictions(
+        predicted_random_empathy_rankings, real_random_rankings, "generated_data/empathy_random_")
 
-    # # Buddies
-    # predicted_buddies_empathy_rankings = evaluation.generate_empathy_predictions(
-    #     buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_empathy.txt")
+    # Buddies
+    predicted_buddies_empathy_rankings = evaluation.generate_empathy_predictions(
+        buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_empathy.txt")
 
-    # evaluation.evaluate_predictions(
-    #     predicted_buddies_empathy_rankings, real_buddies_rankings, "generated_data/empathy_buddies_ndcg.csv")
+    evaluation.evaluate_predictions(
+        predicted_buddies_empathy_rankings, real_buddies_rankings, "generated_data/empathy_buddies_")
 
     # ===================== CINEPHILE =====================
 
     # Random
-    # predicted_random_cinephile_rankings = evaluation.generate_cinephile_predictions(
-    #     random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_cinephile.txt")
+    predicted_random_cinephile_rankings = evaluation.generate_cinephile_predictions(
+        random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_cinephile.txt")
 
-    # evaluation.evaluate_predictions(
-    #     predicted_random_cinephile_rankings, real_random_rankings, "generated_data/cinephile_random_ndcg.csv")
+    evaluation.evaluate_predictions(
+        predicted_random_cinephile_rankings, real_random_rankings, "generated_data/cinephile_random_")
 
-    # # Buddies
-    # predicted_buddies_cinephile_rankings = evaluation.generate_cinephile_predictions(
-    #     buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_cinephile.txt")
+    # Buddies
+    predicted_buddies_cinephile_rankings = evaluation.generate_cinephile_predictions(
+        buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_cinephile.txt")
 
-    # evaluation.evaluate_predictions(
-    #     predicted_buddies_cinephile_rankings, real_buddies_rankings, "generated_data/cinephile_buddies_ndcg.csv")
+    evaluation.evaluate_predictions(
+        predicted_buddies_cinephile_rankings, real_buddies_rankings, "generated_data/cinephile_buddies_")
 
     # ===================== OPTIMIST =====================
 
     # Random
-    # predicted_random_optimist_rankings = evaluation.generate_optimist_predictions(
-    #     random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_optimist.txt")
+    predicted_random_optimist_rankings = evaluation.generate_optimist_predictions(
+        random_groups, random_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_random_optimist.txt")
 
-    # evaluation.evaluate_predictions(
-    #     predicted_random_optimist_rankings, real_random_rankings, "generated_data/optimist_random_ndcg.csv")
+    evaluation.evaluate_predictions(
+        predicted_random_optimist_rankings, real_random_rankings, "generated_data/optimist_random_")
 
-    # # Buddies
-    # predicted_buddies_optimist_rankings = evaluation.generate_optimist_predictions(
-    #     buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_optimist.txt")
+    # Buddies
+    predicted_buddies_optimist_rankings = evaluation.generate_optimist_predictions(
+        buddies_groups, buddies_evaluated_movies, test_ratings_by_user, "generated_data/rankings/predicted_buddies_optimist.txt")
 
-    # evaluation.evaluate_predictions(
-    #     predicted_buddies_optimist_rankings, real_buddies_rankings, "generated_data/optimist_buddies_ndcg.csv")
+    evaluation.evaluate_predictions(
+        predicted_buddies_optimist_rankings, real_buddies_rankings, "generated_data/optimist_buddies_")
 
     # ===================== SIMILARITY =====================
     
@@ -119,11 +119,11 @@ if __name__ == "__main__":
         random_groups, random_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_random_similarity.txt")
 
     evaluation.evaluate_predictions(
-        predicted_random_similarity_rankings, real_random_rankings, "generated_data/similarity_random_ndcg.csv")
+        predicted_random_similarity_rankings, real_random_rankings, "generated_data/similarity_random_")
 
     # Buddies
     predicted_buddies_similarity_rankings = evaluation.generate_similarity_predictions(
         buddies_groups, buddies_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_buddies_similarity.txt")
 
     evaluation.evaluate_predictions(
-        predicted_buddies_similarity_rankings, real_buddies_rankings, "generated_data/similarity_buddies_ndcg.csv")
+        predicted_buddies_similarity_rankings, real_buddies_rankings, "generated_data/similarity_buddies_")
