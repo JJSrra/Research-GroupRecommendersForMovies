@@ -106,12 +106,12 @@ def generate_baseline_predictions(groups, movies_by_group, ratings_by_user, pear
 
     return {"avg": avg_rankings, "min": min_rankings, "max": max_rankings, "maj": maj_rankings}
 
-def generate_pogrs_predictions(groups, movies_by_group, ratings_by_user, output_file):
+def generate_pogrs_predictions(groups, movies_by_group, ratings_by_user, pearson, output_file):
 
     pogrs_rankings = {}
     for i in range(0, len(groups)):
         if i in movies_by_group.keys(): # If there is at least 1 movie that the group have seen in common
-            pogrs_rankings[i] = pogrs.predict_ranking_from_group(groups[i], movies_by_group[i], ratings_by_user)
+            pogrs_rankings[i] = pogrs.predict_ranking_from_group(groups[i], movies_by_group[i], ratings_by_user, pearson)
 
     f = open(output_file, "w")
     f.write(str(pogrs_rankings))
@@ -119,7 +119,7 @@ def generate_pogrs_predictions(groups, movies_by_group, ratings_by_user, output_
 
     return {"avg": pogrs_rankings, "min": pogrs_rankings, "max": pogrs_rankings, "maj": pogrs_rankings}
 
-def generate_empathy_predictions(groups, movies_by_group, ratings_by_user, output_file):
+def generate_empathy_predictions(groups, movies_by_group, ratings_by_user, pearson, output_file):
 
     empathy_rankings = {}
     for i in range(0, len(groups)):
@@ -132,7 +132,7 @@ def generate_empathy_predictions(groups, movies_by_group, ratings_by_user, outpu
 
     return {"avg": empathy_rankings, "min": empathy_rankings, "max": empathy_rankings, "maj": empathy_rankings}
 
-def generate_cinephile_predictions(groups, movies_by_group, ratings_by_user, output_file):
+def generate_cinephile_predictions(groups, movies_by_group, ratings_by_user, pearson, output_file):
 
     cinephile_rankings = {}
     for i in range(0, len(groups)):
@@ -145,7 +145,7 @@ def generate_cinephile_predictions(groups, movies_by_group, ratings_by_user, out
 
     return {"avg": cinephile_rankings, "min": cinephile_rankings, "max": cinephile_rankings, "maj": cinephile_rankings}
 
-def generate_optimist_predictions(groups, movies_by_group, ratings_by_user, output_file):
+def generate_optimist_predictions(groups, movies_by_group, ratings_by_user, pearson, output_file):
 
     optimist_rankings = {}
     for i in range(0, len(groups)):
