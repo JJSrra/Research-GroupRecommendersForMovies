@@ -13,13 +13,13 @@ def predict_group_individual_ratings_for_movie(group, movie, movie_ratings, pear
 
     # For each user in the group, calculate their K-nearest neighbors and predict their rating 
     for group_user in group:
-        nearest_neighbors = sorted(
-            available_users, key=lambda user: pearson_matrix[group_user, user], reverse=True)[:k_nearest]
-        
+        nearest_neighbors = obtain_nearest_neighbors(group_user, available_users, k_nearest, pearson_matrix)
         group_ratings.append(predict_rating(group_user, nearest_neighbors, movie, movie_ratings, pearson_matrix[group_user]))
 
     return group_ratings
 
+def obtain_nearest_neighbors(user, available_neighbors, k_nearest, pearson_matrix):
+    return sorted(available_neighbors, key=lambda neighbor: pearson_matrix[user, neighbor], reverse=True)[:k_nearest]
 
 def predict_rating(user, neighbors, movie, movie_ratings, user_correlation):
     # Initialize these variables that will serve as an accumulation
