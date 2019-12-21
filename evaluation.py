@@ -124,7 +124,7 @@ def generate_empathy_predictions(groups, movies_by_group, ratings_by_user, pears
     empathy_rankings = {}
     for i in range(0, len(groups)):
         if i in movies_by_group.keys(): # If there is at least 1 movie that the group have seen in common
-            empathy_rankings[i] = empathy.predict_ranking_from_group(groups[i], movies_by_group[i], ratings_by_user)
+            empathy_rankings[i] = empathy.predict_ranking_from_group(groups[i], movies_by_group[i], ratings_by_user, pearson)
 
     f = open(output_file, "w")
     f.write(str(empathy_rankings))
@@ -177,7 +177,7 @@ def evaluate_predictions(predicted_rankings, real_rankings, output_file):
     ndcg_max = calculate_mean_ndcg(real_rankings["max"], predicted_rankings["max"], 122)
     ndcg_maj = calculate_mean_ndcg(real_rankings["maj"], predicted_rankings["maj"], 122)
 
-    f = open(output_file + "ndcg.csv", "w")
+    f = open(output_file, "w")
     f.write("nDCG Avg: {}\n".format(ndcg_avg))
     f.write("nDCG Min: {}\n".format(ndcg_min))
     f.write("nDCG Max: {}\n".format(ndcg_max))

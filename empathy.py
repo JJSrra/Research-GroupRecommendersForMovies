@@ -1,10 +1,18 @@
 import numpy as np
 import evaluation
+import baseline
 
-def predict_ranking_from_group(group, movies, movie_ratings):
+def predict_individual_rating_for_movie(user, group, movie, movie_ratings, pearson_matrix):
+    dim = len(pearson_matrix) # Rembember that User IDs start at 1 but we need a 0 row/column, so this is 1 more
+    available_neighbors = [user for user in range(1, dim) if user not in group]
+
+    nearest_neighbors = baseline.obtain_nearest_neighbors(user, available_neighbors, 10, pearson_matrix)
+    return baseline.predict_rating(user, nearest_neighbors, movie, movie_ratings, pearson_matrix[user])
+
+def predict_ranking_from_group(group, movies, movie_ratings, pearson_matrix):
     ranking = []
     weights = np.repeat(1/len(group), len(group))
-    ratings_matrix = get_ratings_matrix(group, movies, movie_ratings)
+    ratings_matrix = get_ratings_matrix(group, movies, movie_ratings, pearson_matrix)
 
     while len(movies) > 1:
         chosen_movie, movies, ratings_matrix, weights = choose_movie_and_update_weights(
@@ -15,13 +23,13 @@ def predict_ranking_from_group(group, movies, movie_ratings):
     ranking.append(movies[0])
     return ranking
 
-def get_ratings_matrix(users, movies, movie_ratings):
+def get_ratings_matrix(users, movies, movie_ratings, pearson_matrix):
     ratings_matrix = np.empty([len(users), len(movies)])
 
     for i in range(0, len(users)):
         user_ratings = []
         for movie in movies:
-            user_ratings.append(0.0 if movie not in movie_ratings[users[i]].keys() else movie_ratings[users[i]][movie])
+            user_ratings.append(predict_individual_rating_for_movie(users[i], users, movie, movie_ratings, pearson_matrix))
 
         ratings_matrix[i] = user_ratings
 
