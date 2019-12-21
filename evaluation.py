@@ -137,7 +137,7 @@ def generate_cinephile_predictions(groups, movies_by_group, ratings_by_user, pea
     cinephile_rankings = {}
     for i in range(0, len(groups)):
         if i in movies_by_group.keys(): # If there is at least 1 movie that the group have seen in common
-            cinephile_rankings[i] = cinephile.predict_ranking_from_group(groups[i], movies_by_group[i], ratings_by_user)
+            cinephile_rankings[i] = cinephile.predict_ranking_from_group(groups[i], movies_by_group[i], ratings_by_user, pearson)
 
     f = open(output_file, "w")
     f.write(str(cinephile_rankings))
