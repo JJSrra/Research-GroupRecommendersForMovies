@@ -147,12 +147,13 @@ def generate_cinephile_predictions(groups, movies_by_group, train_ratings_by_use
 
     return {"avg": cinephile_rankings, "min": cinephile_rankings, "max": cinephile_rankings, "maj": cinephile_rankings}
 
-def generate_optimist_predictions(groups, movies_by_group, ratings_by_user, pearson, output_file):
+def generate_optimist_predictions(groups, movies_by_group, train_ratings_by_user, test_ratings_by_user, pearson, output_file):
 
     optimist_rankings = {}
     for i in range(0, len(groups)):
         if i in movies_by_group.keys(): # If there is at least 1 movie that the group have seen in common
-            optimist_rankings[i] = optimist.predict_ranking_from_group(groups[i], movies_by_group[i], ratings_by_user, pearson)
+            optimist_rankings[i] = optimist.predict_ranking_from_group(groups[i], movies_by_group[i],
+            train_ratings_by_user, test_ratings_by_user, pearson)
 
     f = open(output_file, "w")
     f.write(str(optimist_rankings))
