@@ -132,12 +132,14 @@ def generate_empathy_predictions(groups, movies_by_group, ratings_by_user, pears
 
     return {"avg": empathy_rankings, "min": empathy_rankings, "max": empathy_rankings, "maj": empathy_rankings}
 
-def generate_cinephile_predictions(groups, movies_by_group, ratings_by_user, pearson, output_file):
+
+def generate_cinephile_predictions(groups, movies_by_group, train_ratings_by_user, test_ratings_by_user, pearson, output_file):
 
     cinephile_rankings = {}
     for i in range(0, len(groups)):
         if i in movies_by_group.keys(): # If there is at least 1 movie that the group have seen in common
-            cinephile_rankings[i] = cinephile.predict_ranking_from_group(groups[i], movies_by_group[i], ratings_by_user, pearson)
+            cinephile_rankings[i] = cinephile.predict_ranking_from_group(groups[i], movies_by_group[i],
+            train_ratings_by_user, test_ratings_by_user, pearson)
 
     f = open(output_file, "w")
     f.write(str(cinephile_rankings))

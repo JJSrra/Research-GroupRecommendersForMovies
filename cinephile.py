@@ -9,16 +9,14 @@ def predict_individual_rating_for_movie(user, group, movie, movie_ratings, pears
     nearest_neighbors = baseline.obtain_nearest_neighbors(user, available_neighbors, 10, pearson_matrix)
     return baseline.predict_rating(user, nearest_neighbors, movie, movie_ratings, pearson_matrix[user])
 
-def predict_ranking_from_group(group, movies, movie_ratings, pearson_matrix):
+def predict_ranking_from_group(group, movies, train_movie_ratings, test_movie_ratings, pearson_matrix):
     ranking = []
-    weights = get_cinephile_weights(group, movie_ratings)
-    ratings_matrix = get_ratings_matrix(group, movies, movie_ratings, pearson_matrix)
+    weights = get_cinephile_weights(group, train_movie_ratings)
+    ratings_matrix = get_ratings_matrix(group, movies, test_movie_ratings, pearson_matrix)
     ratings_matrix = (ratings_matrix.T * weights).T
 
     while len(movies) > 1:
-        chosen_movie, movies, ratings_matrix = choose_movie(
-            ratings_matrix, movies, group, movie_ratings)
-
+        chosen_movie, movies, ratings_matrix = choose_movie(ratings_matrix, movies, group)
         ranking.append(chosen_movie)
 
     ranking.append(movies[0])
@@ -46,7 +44,7 @@ def get_ratings_matrix(users, movies, movie_ratings, pearson_matrix):
 
     return ratings_matrix
 
-def choose_movie(ratings_matrix, movies, group, movie_ratings):
+def choose_movie(ratings_matrix, movies, group):
     final_ratings = np.apply_along_axis(np.sum, 0, ratings_matrix)
 
     chosen_movie_index = np.argsort(-final_ratings)[0]

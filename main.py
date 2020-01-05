@@ -26,6 +26,8 @@ if __name__ == "__main__":
     maj_real_rankings = eval(open('generated_data/rankings/real_buddies_maj.txt', 'r').read())
     real_buddies_rankings = {"avg": avg_real_rankings, "min": min_real_rankings, "max": max_real_rankings, "maj": maj_real_rankings}
 
+    read_dict = open('generated_data/train_ratings.txt', 'r').read()
+    train_ratings_by_user = eval(read_dict)
     read_dict = open('generated_data/test_ratings.txt', 'r').read()
     test_ratings_by_user = eval(read_dict)
 
@@ -84,14 +86,14 @@ if __name__ == "__main__":
 
     # Random
     predicted_random_cinephile_rankings = evaluation.generate_cinephile_predictions(
-        random_groups, random_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_random_cinephile.txt")
+        random_groups, random_evaluated_movies, train_ratings_by_user, test_ratings_by_user, pearson, "generated_data/rankings/predicted_random_cinephile.txt")
 
     evaluation.evaluate_predictions(
         predicted_random_cinephile_rankings, real_random_rankings, "generated_data/cinephile_random_ndcg.csv")
 
     # Buddies
     predicted_buddies_cinephile_rankings = evaluation.generate_cinephile_predictions(
-        buddies_groups, buddies_evaluated_movies, test_ratings_by_user, pearson, "generated_data/rankings/predicted_buddies_cinephile.txt")
+        buddies_groups, buddies_evaluated_movies, train_ratings_by_user, test_ratings_by_user, pearson, "generated_data/rankings/predicted_buddies_cinephile.txt")
 
     evaluation.evaluate_predictions(
         predicted_buddies_cinephile_rankings, real_buddies_rankings, "generated_data/cinephile_buddies_ndcg.csv")
