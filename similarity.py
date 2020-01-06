@@ -10,12 +10,12 @@ def predict_individual_rating_for_movie(user, group, movie, movie_ratings, pears
     return baseline.predict_rating(user, nearest_neighbors, movie, movie_ratings, pearson_matrix[user])
 
 def predict_ranking_from_group(group, movies, movie_ratings, pearson_matrix):
-    profile_user = get_profile_user_for_group(group, movie_ratings, pearson_matrix)
+    profile_user = get_profile_user_for_group(group, pearson_matrix)
     ranking = get_ranking_from_profile_user(profile_user, group, movies, movie_ratings, pearson_matrix)
     
     return ranking
 
-def get_profile_user_for_group(group, movie_ratings, pearson_matrix):
+def get_profile_user_for_group(group, pearson_matrix):
     avg_similarity = []
     for user in group:
         other_users = list(filter(lambda group_user : group_user != user, group))
